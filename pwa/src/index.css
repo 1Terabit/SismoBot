@@ -103,13 +103,15 @@ body {
 .app {
   display: flex;
   flex-direction: column;
-  min-height: 100dvh;
+  height: 100dvh;
+  overflow: hidden;
 }
 
 .app__main {
   display: flex;
   flex: 1;
   overflow: hidden;
+  position: relative;
 }
 
 .app__map {
@@ -163,8 +165,8 @@ body {
 /* ─── Brand Watermark ─────────────────────────────────────────── */
 .brand-watermark {
   position: absolute;
-  bottom: max(32px, env(safe-area-inset-bottom));
-  left: max(24px, env(safe-area-inset-left));
+  bottom: max(16px, env(safe-area-inset-bottom));
+  left: max(16px, env(safe-area-inset-left));
   z-index: 1000;
   pointer-events: none;
   font-family: 'Outfit', sans-serif;
@@ -866,7 +868,7 @@ body {
 /* ─── Dynamic Island ────────────────────────────────────────── */
 .dynamic-island-wrapper {
   position: absolute;
-  bottom: max(32px, env(safe-area-inset-bottom));
+  bottom: max(16px, env(safe-area-inset-bottom));
   left: 50%;
   transform: translateX(-50%);
   z-index: 2000;
@@ -951,7 +953,7 @@ body {
   }
 
   .app__map {
-    height: 100dvh;
+    height: 100%;
     flex: 1;
   }
 
@@ -961,7 +963,7 @@ body {
     top: 0;
     width: 320px;
     max-width: 85vw;
-    height: 100dvh;
+    height: 100%;
     z-index: 1000;
     border-left: 1px solid var(--border);
     border-top: none;
