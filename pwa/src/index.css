@@ -163,8 +163,8 @@ body {
 /* ─── Brand Watermark ─────────────────────────────────────────── */
 .brand-watermark {
   position: absolute;
-  bottom: 24px;
-  left: 24px;
+  bottom: max(24px, env(safe-area-inset-bottom));
+  left: max(24px, env(safe-area-inset-left));
   z-index: 1000;
   pointer-events: none;
   font-family: 'Outfit', sans-serif;
@@ -195,7 +195,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 20px;
+  padding: max(12px, env(safe-area-inset-top)) max(20px, env(safe-area-inset-right)) 12px max(20px, env(safe-area-inset-left));
   background: var(--bg-glass);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -238,6 +238,16 @@ body {
   border-radius: 50%;
   background: var(--severity-micro);
   animation: pulse-dot 2s ease-in-out infinite;
+}
+
+.header__hamburger {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 4px;
 }
 
 .header__actions {
@@ -879,6 +889,7 @@ body {
     transform: translateX(0);
     transition: transform var(--transition-normal);
     box-shadow: -4px 0 25px rgba(0, 0, 0, 0.7);
+    padding-bottom: env(safe-area-inset-bottom);
   }
 
   .app__main--collapsed .app__sidebar {
@@ -911,7 +922,7 @@ body {
   }
 
   .header {
-    padding: 10px 14px;
+    padding: max(10px, env(safe-area-inset-top)) max(14px, env(safe-area-inset-right)) 10px max(14px, env(safe-area-inset-left));
   }
 
   .header__logo {
@@ -920,6 +931,29 @@ body {
 
   .header__status {
     display: none;
+  }
+
+  .header__hamburger {
+    display: block;
+  }
+
+  .header__actions {
+    display: none;
+    position: absolute;
+    top: calc(100% - 10px);
+    right: max(14px, env(safe-area-inset-right));
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    flex-direction: column;
+    padding: 12px;
+    gap: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
+    z-index: 2000;
+  }
+
+  .header__actions--open {
+    display: flex;
   }
 }
 

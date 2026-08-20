@@ -104,6 +104,7 @@ export default function App() {
 
   const handleEventClick = (event: SeismicEvent) => {
     setSelectedEvent(event);
+    setIsSidebarOpen(false); // Close sidebar so flyTo map animation is visible on mobile
   };
 
   return (
