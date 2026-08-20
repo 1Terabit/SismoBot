@@ -72,6 +72,10 @@ export default function App() {
           onHighlightStarted: () => { setIsSidebarOpen(false); setIsIslandOpen(false); }
         },
         {
+          popover: { title: t("tour.step_science.title"), description: t("tour.step_science.desc") },
+          onHighlightStarted: () => { setIsSidebarOpen(false); setIsIslandOpen(false); }
+        },
+        {
           element: '.header__status',
           popover: { title: t("tour.step_live.title"), description: t("tour.step_live.desc"), side: "bottom", align: "center" }
         },

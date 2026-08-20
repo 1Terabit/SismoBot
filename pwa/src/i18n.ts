@@ -41,6 +41,9 @@ const resources = {
       "tour.step1.title": "¡Bienvenido a SismoBot!",
       "tour.step1.desc": "Aquí puedes ver los terremotos que ocurren en el mundo en tiempo real. ¡El mapa es interactivo!",
       
+      "tour.step_science.title": "🌎 ¿Sabías Qué?",
+      "tour.step_science.desc": "La Tectónica de Placas explica cómo se acumula la energía bajo tus pies, y la Sismología estudia qué pasa cuando esa energía explota. ¡SismoBot usa ambas ciencias para protegerte!",
+      
       "tour.step_live.title": "Conexión Satelital En Vivo",
       "tour.step_live.desc": "Estamos conectados directamente a las redes sísmicas de USGS y EMSC. Recibes los datos al instante.",
       
@@ -99,6 +102,9 @@ const resources = {
 
       "tour.step1.title": "Welcome to QuakeBot!",
       "tour.step1.desc": "Here you can see the earthquakes happening around the world in real time. The map is interactive!",
+      
+      "tour.step_science.title": "🌎 Did You Know?",
+      "tour.step_science.desc": "Plate Tectonics explains how energy accumulates under your feet, and Seismology studies what happens when that energy is released. QuakeBot uses both sciences to protect you!",
       
       "tour.step_live.title": "Live Satellite Connection",
       "tour.step_live.desc": "We are directly connected to the USGS and EMSC seismic networks. You receive data instantly.",

@@ -58,6 +58,8 @@ const i18n = {
     legendRateText: "Mide la cantidad de sismos recientes (30 días) frente al promedio histórico. Un 'Ratio' de 2.0x significa el doble de sismos. La 'Significancia' indica qué tan inusual es estadísticamente este cambio.\n\n",
     legendETASTitle: "Modelo ETAS (Réplicas): ",
     legendETASText: "Es un modelo epidémico que calcula la probabilidad de réplicas en las próximas 24 horas después de un evento sísmico importante (el evento 'Base'). 'Prob. M4+' significa la probabilidad de tener una réplica de magnitud 4 o superior.\n\n",
+    didYouKnowTitle: "¿SABÍAS QUÉ? (Tectónica vs Sismología)\n",
+    didYouKnowText: "La Tectónica de Placas explica cómo se acumula la energía bajo tus pies debido a la fricción, y la Sismología estudia qué pasa cuando esa energía explota. SismoBot utiliza ambas ciencias en conjunto para protegerte.\n\n",
     legendRiskLevels: "Niveles de Riesgo:\n",
     legendLowText: "Actividad dentro de los parámetros normales de la región.\n",
     legendModerateText: "Se observan anomalías estadísticas aisladas; requiere monitoreo.\n",
@@ -125,6 +127,8 @@ const i18n = {
     legendRateText: "Measures the amount of recent earthquakes (30 days) against the historical average. A 'Ratio' of 2.0x means double the typical amount. 'Significance' indicates how statistically unusual this change is.\n\n",
     legendETASTitle: "ETAS Model (Aftershocks): ",
     legendETASText: "An epidemic model calculating the probability of aftershocks within the next 24 hours following a major seismic event (the 'Baseline' event). 'Prob. M4+' refers to the probability of an aftershock of magnitude 4 or greater.\n\n",
+    didYouKnowTitle: "DID YOU KNOW? (Tectonics vs Seismology)\n",
+    didYouKnowText: "Plate Tectonics explains how energy accumulates under your feet due to friction, and Seismology studies what happens when that energy is released. QuakeBot uses both sciences together to protect you.\n\n",
     legendRiskLevels: "Risk Levels:\n",
     legendLowText: "Activity within normal parameters for the region.\n",
     legendModerateText: "Isolated statistical anomalies observed; requires monitoring.\n",
@@ -324,6 +328,9 @@ function buildReportDocument(report: RiskAssessmentReport, lang: "es" | "en" = "
           { text: t.legendETASTitle, bold: true },
           t.legendETASText,
           
+          { text: t.didYouKnowTitle, bold: true, color: "#2563eb" },
+          t.didYouKnowText,
+
           { text: t.legendRiskLevels, bold: true },
           { text: t.lowBadge, bold: true, color: "#16a34a" }, t.legendLowText,
           { text: t.moderateBadge, bold: true, color: "#d97706" }, t.legendModerateText,
@@ -344,7 +351,19 @@ function buildReportDocument(report: RiskAssessmentReport, lang: "es" | "en" = "
     style: "disclaimer",
   });
 
+  const logoPath = path.join(__dirname, "../../../../pwa/public/icons/icon-circle.png");
+
   return {
+    background: function (currentPage: number, pageSize: { width: number, height: number }) {
+      return [
+        {
+          image: logoPath,
+          width: 300,
+          absolutePosition: { x: (pageSize.width - 300) / 2, y: (pageSize.height - 300) / 2 },
+          opacity: 0.05
+        }
+      ];
+    },
     content,
     footer: function(currentPage: number, pageCount: number) {
       return {
