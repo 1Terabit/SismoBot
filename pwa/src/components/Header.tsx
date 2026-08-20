@@ -5,7 +5,7 @@ interface HeaderProps {
   onStartTour: () => void;
 }
 
-import { useState } from "react";
+
 import { useTranslation } from "react-i18next";
 
 export function Header({ lastUpdate, eventCount, onOpenSettings, onStartTour }: HeaderProps) {
