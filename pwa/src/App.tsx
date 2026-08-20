@@ -99,6 +99,11 @@ export default function App() {
           element: '#btn-settings-island',
           popover: { title: t("tour.step4.title"), description: t("tour.step4.desc"), side: "top", align: "center" },
           onHighlightStarted: () => { setIsSidebarOpen(false); setIsIslandOpen(true); }
+        },
+        {
+          element: '#btn-download-pdf-island',
+          popover: { title: "Boletín PDF", description: "Descarga el reporte de inteligencia sísmica más reciente en formato PDF.", side: "top", align: "center" },
+          onHighlightStarted: () => { setIsSidebarOpen(false); setIsIslandOpen(true); }
         }
       ]
     });
