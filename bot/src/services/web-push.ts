@@ -1,8 +1,8 @@
 import webpush from "web-push";
 import { SeismicEvent } from "../sources/types";
 import { getPushSubscriptions, removePushSubscription } from "../db/database";
-import { getSeverityLabel } from "../config";
-import { isEventInRegion } from "../utils/geo";
+import { REGIONS, getSeverityLabel } from "../config";
+import { isInBoundingBox } from "../utils/geo";
 import { logger } from "../utils/logger";
 
 let initialized = false;
@@ -37,7 +37,11 @@ export async function sendWebPushNotifications(event: SeismicEvent): Promise<num
   const validSubscriptions = subscriptions.filter(sub => {
     if (event.magnitude < sub.min_magnitude) return false;
     if (sub.regions.includes("all") || sub.regions.includes("latam")) return true;
-    return sub.regions.some(r => isEventInRegion(event, r));
+    return sub.regions.some(r => {
+      const region = REGIONS[r];
+      if (!region) return false;
+      return isInBoundingBox(event.lat, event.lon, region.minLat, region.maxLat, region.minLon, region.maxLon);
+    });
   });
 
   if (validSubscriptions.length === 0) return 0;
