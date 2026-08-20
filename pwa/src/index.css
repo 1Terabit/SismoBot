@@ -855,41 +855,59 @@ body {
 /* ─── Responsive ────────────────────────────────────────────── */
 @media (max-width: 768px) {
   .app__main {
-    flex-direction: column;
+    flex-direction: row;
+    position: relative;
+    overflow: hidden;
   }
 
   .app__map {
-    height: 50vh;
+    height: 100dvh;
     flex: 1;
   }
 
   .app__sidebar {
-    width: 100%;
-    height: 50vh;
-    border-left: none;
-    border-top: 1px solid var(--border);
-    transition: margin-bottom var(--transition-normal);
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 320px;
+    max-width: 85vw;
+    height: 100%;
+    z-index: 1000;
+    border-left: 1px solid var(--border);
+    border-top: none;
+    transform: translateX(0);
+    transition: transform var(--transition-normal);
+    box-shadow: -4px 0 25px rgba(0, 0, 0, 0.7);
   }
 
   .app__main--collapsed .app__sidebar {
+    transform: translateX(100%);
     margin-right: 0;
-    margin-bottom: -50vh;
+    margin-bottom: 0;
   }
 
   .sidebar-toggle {
-    right: 50%;
-    top: auto;
-    bottom: 0;
-    transform: translate(50%, 0);
-    width: 56px;
-    height: 28px;
-    border-radius: 8px 8px 0 0;
-    animation: pulse-outward-mobile 2s infinite;
+    right: 0;
+    top: 50%;
+    bottom: auto;
+    transform: translateY(-50%);
+    width: 28px;
+    height: 64px;
+    border-radius: 8px 0 0 8px;
+    z-index: 2000;
+    transition: right var(--transition-normal);
+    animation: pulse-outward 2s infinite;
   }
   
+  .app__main:not(.app__main--collapsed) .sidebar-toggle {
+    right: min(320px, 85vw);
+    animation: none;
+  }
+
   .sidebar-toggle:hover {
-    padding-right: 0;
-    padding-bottom: 4px;
+    padding-right: 4px;
+    padding-bottom: 0;
   }
 
   .header {
