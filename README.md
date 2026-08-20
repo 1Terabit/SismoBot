@@ -1,6 +1,6 @@
 # SismoBot 🌍⚡
 
-![SismoBot](pwa/public/sismobot.png)
+![SismoBot](./pwa/public/sismobot.png)
 
 **SismoBot** is a comprehensive, real-time seismic alert system designed to monitor and notify users about earthquakes globally. It combines a highly interactive Progressive Web App (PWA) with a dedicated Telegram bot (`@Sismove_bot`) to ensure you receive critical alerts wherever you are.
 
