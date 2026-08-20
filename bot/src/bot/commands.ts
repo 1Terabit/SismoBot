@@ -16,6 +16,8 @@ import {
 import { REGIONS, ALL_REGION_KEYS, MAGNITUDE_OPTIONS, getSeverityEmoji } from "../config";
 import { haversineDistance, formatDistance } from "../utils/geo";
 import { logger } from "../utils/logger";
+import { getLastReport, getLastPdfPath } from "../analysis/workflow";
+import { InputFile } from "grammy";
 
 const startTime = Date.now();
 
@@ -31,6 +33,8 @@ export function registerCommands(bot: Bot): void {
   bot.command("silencio", (ctx) => handleSilentHours(ctx));
   bot.command("ultimo", (ctx) => handleLastEvent(ctx));
   bot.command("estado", (ctx) => handleStatus(ctx));
+  bot.command("riesgo", (ctx) => handleRisk(ctx));
+  bot.command("reporte", (ctx) => handleReporte(ctx));
   bot.command("parar", (ctx) => handleStop(ctx));
   bot.command("ayuda", (ctx) => handleHelp(ctx));
   bot.command("ping", (ctx) => handlePing(ctx));
@@ -51,6 +55,8 @@ export function registerCommands(bot: Bot): void {
     { command: "silencio", description: "Configurar horario silencioso" },
     { command: "ultimo", description: "Último sismo registrado" },
     { command: "estado", description: "Estado del sistema" },
+    { command: "riesgo", description: "Resumen del análisis de riesgo" },
+    { command: "reporte", description: "Descargar Boletín Oficial (PDF)" },
     { command: "parar", description: "Desactivar alertas" },
     { command: "ayuda", description: "Guía de uso" },
   ]).catch((err) => logger.warn("Bot", "Failed to set commands", err));
@@ -316,6 +322,61 @@ async function handlePing(ctx: CommandContext<Context>): Promise<void> {
     await ctx.reply(`🏓 Pong!\n\n⏱ Uptime: ${uptime}\n💽 DB Latency: ${dbLatency}ms`);
   } catch (err) {
     await ctx.reply("❌ Base de datos inalcanzable");
+  }
+}
+
+async function handleRisk(ctx: CommandContext<Context>): Promise<void> {
+  const report = getLastReport();
+  if (!report) {
+    await ctx.reply("ℹ️ El motor de Análisis de Riesgo aún está procesando los datos base. Intenta de nuevo más tarde.");
+    return;
+  }
+
+  let text = `🚨 *RESUMEN DE RIESGO SÍSMICO*\n_Generado: ${new Date(report.generatedAt).toLocaleString("es-VE", { timeZone: "America/Caracas" })}_\n\n`;
+  
+  for (const assessment of report.assessments) {
+    const emoji = { low: "🟢", moderate: "🟡", high: "🟠", critical: "🔴" }[assessment.riskLevel];
+    text += `${emoji} *${assessment.regionName.toUpperCase()}*\n`;
+    text += `Nivel: *${assessment.riskLevel.toUpperCase()}* (${assessment.riskScore}/100)\n`;
+    
+    if (assessment.indicators.bValue) {
+      text += `• Valor b: ${assessment.indicators.bValue.currentBValue} ${assessment.indicators.bValue.deviation > 1 ? "⚠️" : ""}\n`;
+    }
+    if (assessment.indicators.rate) {
+      text += `• Tasa: ${assessment.indicators.rate.rateRatio}x\n`;
+    }
+    if (assessment.indicators.activeForecasts.length > 0) {
+      const etas = assessment.indicators.activeForecasts[0];
+      text += `• ETAS: ${(etas.forecast24h.probM4 * 100).toFixed(1)}% prob M4+ (24h)\n`;
+    }
+    text += "\n";
+  }
+  
+  text += `Para un detalle exhaustivo, usa /reporte y descarga el Boletín Oficial en PDF.`;
+  
+  await ctx.reply(text, { parse_mode: "Markdown" });
+}
+
+async function handleReporte(ctx: CommandContext<Context>): Promise<void> {
+  const pdfPath = getLastPdfPath();
+  const report = getLastReport();
+
+  if (!pdfPath || !report) {
+    await ctx.reply("ℹ️ Aún no hay un Boletín Oficial disponible. Se generan periódicamente cada 6 horas.");
+    return;
+  }
+
+  await ctx.replyWithChatAction("upload_document");
+  
+  try {
+    const file = new InputFile(pdfPath);
+    await ctx.replyWithDocument(file, {
+      caption: `📄 *BOLETÍN SÍSMICO OFICIAL*\n_Generado: ${new Date(report.generatedAt).toLocaleString("es-VE", { timeZone: "America/Caracas" })}_\n\nAnálisis de anomalías (Valor b, Tasa, Modelo ETAS).`,
+      parse_mode: "Markdown"
+    });
+  } catch (err) {
+    logger.error("Bot", "Failed to send PDF report", err);
+    await ctx.reply("❌ Error al enviar el archivo PDF.");
   }
 }
 

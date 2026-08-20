@@ -13,6 +13,7 @@ import { getAllActiveUsers, cleanOldEvents, initDatabase } from "./db/database";
 import { POLL_INTERVAL_MS } from "./config";
 import { initWebPush } from "./services/web-push";
 import { logger } from "./utils/logger";
+import { startAnalysisScheduler } from "./analysis/workflow";
 
 async function main(): Promise<void> {
   logger.info("Main", "═══════════════════════════════════════════════");
@@ -142,7 +143,10 @@ async function main(): Promise<void> {
     }
   });
 
-  // 7. Graceful shutdown
+  // 7. Start Seismic Risk Analysis Scheduler (runs every 6 hours)
+  startAnalysisScheduler();
+
+  // 8. Graceful shutdown
   const shutdown = async (): Promise<void> => {
     logger.info("Main", "Shutting down...");
     bot.stop();
