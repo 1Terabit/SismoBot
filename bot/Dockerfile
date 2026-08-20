@@ -26,8 +26,9 @@ RUN corepack enable && corepack prepare pnpm@11.9.0 --activate
 COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile --ignore-scripts --prod
 
-# Copy compiled output
+# Copy compiled output and assets
 COPY --from=builder /app/dist ./dist
+COPY assets/ ./assets/
 
 # Create data directory for SQLite
 RUN mkdir -p /app/data /app/logs
