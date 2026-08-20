@@ -1,4 +1,5 @@
 import "dotenv/config";
+import http from "http";
 import cron from "node-cron";
 import { createBot } from "./bot/bot";
 import { registerCommands } from "./bot/commands";
@@ -152,6 +153,22 @@ async function main(): Promise<void> {
   process.on("SIGTERM", shutdown);
 
   logger.info("Main", "✅ SismoBot is running. Press Ctrl+C to stop.");
+
+  // 8. Start a dummy HTTP server for Render free tier keep-alive
+  const server = http.createServer((req, res) => {
+    if (req.url === "/ping" || req.url === "/") {
+      res.writeHead(200);
+      res.end("pong");
+    } else {
+      res.writeHead(404);
+      res.end();
+    }
+  });
+
+  const port = process.env.PORT || 3000;
+  server.listen(port, () => {
+    logger.info("Main", `Keep-alive HTTP server listening on port ${port}`);
+  });
 }
 
 main().catch((err) => {
