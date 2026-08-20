@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 interface FloatingMenuProps {
@@ -6,6 +5,8 @@ interface FloatingMenuProps {
   onStartTour: () => void;
   onChangeLanguage: () => void;
   currentLang: string;
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
 }
 
 export function FloatingMenu({
@@ -13,9 +14,10 @@ export function FloatingMenu({
   onStartTour,
   onChangeLanguage,
   currentLang,
+  isOpen,
+  setIsOpen,
 }: FloatingMenuProps) {
   const { t } = useTranslation();
-  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <div className={`dynamic-island-wrapper ${isOpen ? "is-open" : ""}`} id="tour-dynamic-island">

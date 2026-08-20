@@ -21,8 +21,9 @@ export default function App() {
   const { settings, updateSettings } = useSettings();
   const [selectedEvent, setSelectedEvent] = useState<SeismicEvent | null>(null);
   const [alertEventId, setAlertEventId] = useState<string | null>(null);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 768);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isIslandOpen, setIsIslandOpen] = useState(false);
   const pushRef = useRef<PushSubscribeHandle>(null);
 
   const filteredEvents = useMemo(() => {
@@ -60,10 +61,15 @@ export default function App() {
       nextBtnText: t("tour.next"),
       prevBtnText: t("tour.prev"),
       doneBtnText: t("tour.done"),
+      onDestroyStarted: () => {
+        setIsIslandOpen(false);
+        driverObj.destroy();
+      },
       steps: [
         {
           element: '#tour-header',
-          popover: { title: t("tour.step1.title"), description: t("tour.step1.desc"), side: "bottom", align: "start" }
+          popover: { title: t("tour.step1.title"), description: t("tour.step1.desc"), side: "bottom", align: "start" },
+          onHighlightStarted: () => { setIsSidebarOpen(false); setIsIslandOpen(false); }
         },
         {
           element: '.header__status',
@@ -71,23 +77,28 @@ export default function App() {
         },
         {
           element: '#tour-feed',
-          popover: { title: t("tour.step2.title"), description: t("tour.step2.desc"), side: "left", align: "start" }
+          popover: { title: t("tour.step2.title"), description: t("tour.step2.desc"), side: "left", align: "start" },
+          onHighlightStarted: () => { setIsSidebarOpen(true); setIsIslandOpen(false); }
         },
         {
           element: '#tour-dynamic-island',
-          popover: { title: "Menú Dinámico", description: "Usa esta flecha para mostrar u ocultar opciones como el Idioma, Configuración y Telegram.", side: "top", align: "center" }
+          popover: { title: "Menú Dinámico", description: "Usa esta flecha para mostrar u ocultar opciones como el Idioma, Configuración y Telegram.", side: "top", align: "center" },
+          onHighlightStarted: () => { setIsSidebarOpen(false); setIsIslandOpen(false); }
         },
         {
           element: '#tour-push',
-          popover: { title: t("tour.step3.title"), description: t("tour.step3.desc"), side: "top", align: "start" }
+          popover: { title: t("tour.step3.title"), description: t("tour.step3.desc"), side: "top", align: "start" },
+          onHighlightStarted: () => { setIsSidebarOpen(true); setIsIslandOpen(false); }
         },
         {
-          element: '#tour-telegram',
-          popover: { title: t("tour.step_telegram.title"), description: t("tour.step_telegram.desc"), side: "bottom", align: "end" }
+          element: '#tour-telegram-island',
+          popover: { title: t("tour.step_telegram.title"), description: t("tour.step_telegram.desc"), side: "top", align: "center" },
+          onHighlightStarted: () => { setIsSidebarOpen(false); setIsIslandOpen(true); }
         },
         {
-          element: '#btn-settings',
-          popover: { title: t("tour.step4.title"), description: t("tour.step4.desc"), side: "bottom", align: "end" }
+          element: '#btn-settings-island',
+          popover: { title: t("tour.step4.title"), description: t("tour.step4.desc"), side: "top", align: "center" },
+          onHighlightStarted: () => { setIsSidebarOpen(false); setIsIslandOpen(true); }
         }
       ]
     });
@@ -138,6 +149,8 @@ export default function App() {
               i18n.changeLanguage(i18n.language.startsWith('es') ? 'en' : 'es');
             }}
             currentLang={i18n.language}
+            isOpen={isIslandOpen}
+            setIsOpen={setIsIslandOpen}
           />
           <button 
             className="sidebar-toggle"

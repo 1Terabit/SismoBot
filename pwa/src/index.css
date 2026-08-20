@@ -964,7 +964,7 @@ body {
     width: 320px;
     max-width: 85vw;
     height: 100%;
-    z-index: 1000;
+    z-index: 3000;
     border-left: 1px solid var(--border);
     border-top: none;
     transform: translateX(0);
@@ -987,7 +987,7 @@ body {
     width: 28px;
     height: 64px;
     border-radius: 8px 0 0 8px;
-    z-index: 2000;
+    z-index: 3001;
     transition: right var(--transition-normal);
     animation: pulse-outward 2s infinite;
   }
