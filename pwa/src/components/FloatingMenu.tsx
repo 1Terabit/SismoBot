@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import { useInstallPrompt } from "../hooks/useInstallPrompt";
 
 interface FloatingMenuProps {
   onOpenSettings: () => void;
@@ -18,6 +19,7 @@ export function FloatingMenu({
   setIsOpen,
 }: FloatingMenuProps) {
   const { t } = useTranslation();
+  const { promptInstall, isInstallable } = useInstallPrompt();
 
   return (
     <div className={`dynamic-island-wrapper ${isOpen ? "is-open" : ""}`} id="tour-dynamic-island">
@@ -47,6 +49,12 @@ export function FloatingMenu({
         <button id="btn-settings-island" className="island-btn" onClick={onOpenSettings} title={t("settings.title")}>
           ⚙️
         </button>
+
+        {isInstallable && (
+          <button id="tour-install-app" className="island-btn" onClick={promptInstall} title={t("install_app")}>
+            📲
+          </button>
+        )}
 
         <a
           id="btn-download-pdf-island"

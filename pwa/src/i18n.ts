@@ -54,7 +54,12 @@ const resources = {
       "tour.step4.desc": "Aquí puedes ajustar qué regiones del mundo quieres vigilar y cuán fuerte debe ser el sismo para notificarte.",
       
       "tour.step_telegram.title": "Bot de Telegram",
-      "tour.step_telegram.desc": "Al darle clic aquí, te llevará a nuestro bot de Telegram para más alertas integradas."
+      "tour.step_telegram.desc": "Al darle clic aquí, te llevará a nuestro bot de Telegram para más alertas integradas.",
+      
+      "tour.step_install.title": "Instalar Aplicación",
+      "tour.step_install.desc": "¡Instala SismoBot en tu pantalla de inicio para una experiencia nativa y más rápida!",
+      
+      "install_app": "Instalar App"
     }
   },
   en: {
@@ -108,7 +113,12 @@ const resources = {
       "tour.step4.desc": "Here you can adjust which regions of the world you want to monitor and how strong the quake needs to be to notify you.",
       
       "tour.step_telegram.title": "Telegram Bot",
-      "tour.step_telegram.desc": "Clicking here will take you to our Telegram bot for more integrated alerts."
+      "tour.step_telegram.desc": "Clicking here will take you to our Telegram bot for more integrated alerts.",
+
+      "tour.step_install.title": "Install Application",
+      "tour.step_install.desc": "Install QuakeBot on your home screen for a native and faster experience!",
+      
+      "install_app": "Install App"
     }
   }
 };

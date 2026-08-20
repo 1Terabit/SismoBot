@@ -91,6 +91,11 @@ export default function App() {
           onHighlightStarted: () => { setIsSidebarOpen(true); setIsIslandOpen(false); }
         },
         {
+          element: '#tour-install-app',
+          popover: { title: t("tour.step_install.title"), description: t("tour.step_install.desc"), side: "top", align: "center" },
+          onHighlightStarted: () => { setIsSidebarOpen(false); setIsIslandOpen(true); }
+        },
+        {
           element: '#tour-telegram-island',
           popover: { title: t("tour.step_telegram.title"), description: t("tour.step_telegram.desc"), side: "top", align: "center" },
           onHighlightStarted: () => { setIsSidebarOpen(false); setIsIslandOpen(true); }
