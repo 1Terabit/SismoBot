@@ -69,14 +69,14 @@ const i18n = {
     riskHigh: "ALTO (ALERTA NARANJA)",
     riskModerate: "MODERADO (ALERTA AMARILLA)",
     riskLow: "BAJO (NORMAL)",
-    disclaimer: "AVISO: Este análisis se genera mediante modelos estadísticos y datos sísmicos en tiempo real provenientes de fuentes oficiales públicas (USGS, EMSC, FUNVISIS). Los terremotos NO se pueden predecir con exactitud. Esta información es puramente referencial. Consulte siempre a las autoridades locales de protección civil para alertas oficiales.",
+    disclaimer: "AVISO: Este análisis se genera mediante modelos estadísticos y datos sísmicos en tiempo real provenientes de fuentes oficiales públicas (USGS, EMSC). Los terremotos NO se pueden predecir con exactitud. Esta información es puramente referencial. Consulte siempre a las autoridades locales de protección civil para alertas oficiales.",
     lowBadge: "[BAJO]: ",
     moderateBadge: "[MODERADO]: ",
     highBadge: "[ALTO]: ",
     criticalBadge: "[CRÍTICO]: ",
     bValueMessage: (trend: string, deviation: number, diff: number) => {
-      if (trend === "anomalous") return `Caída de Valor-b de ${diff.toFixed(2)} detectada (${deviation.toFixed(1)}σ). Esto PODRÍA indicar aumento de tensión tectónica. No es una predicción.`;
-      if (trend === "elevated") return `Valor-b ligeramente por debajo del promedio (${deviation.toFixed(1)}σ). Monitoreando de cerca.`;
+      if (trend === "anomalous") return `Caída de Valor-b de ${diff.toFixed(2)} detectada (${deviation.toFixed(1)} SD). Esto PODRÍA indicar aumento de tensión tectónica. No es una predicción.`;
+      if (trend === "elevated") return `Valor-b ligeramente por debajo del promedio (${deviation.toFixed(1)} SD). Monitoreando de cerca.`;
       return `Valor-b dentro de parámetros normales.`;
     },
     rateMessage: (anomalyType: string, ratio: number, z: number) => {
@@ -136,14 +136,14 @@ const i18n = {
     riskHigh: "HIGH (ORANGE ALERT)",
     riskModerate: "MODERATE (YELLOW ALERT)",
     riskLow: "LOW (NORMAL)",
-    disclaimer: "DISCLAIMER: This analysis is generated using statistical models and real-time seismic data from public official sources (USGS, EMSC, FUNVISIS). Earthquakes CANNOT be predicted with certainty. This information is purely referential. Always consult local civil protection authorities for official alerts.",
+    disclaimer: "DISCLAIMER: This analysis is generated using statistical models and real-time seismic data from public official sources (USGS, EMSC). Earthquakes CANNOT be predicted with certainty. This information is purely referential. Always consult local civil protection authorities for official alerts.",
     lowBadge: "[LOW]: ",
     moderateBadge: "[MODERATE]: ",
     highBadge: "[HIGH]: ",
     criticalBadge: "[CRITICAL]: ",
     bValueMessage: (trend: string, deviation: number, diff: number) => {
-      if (trend === "anomalous") return `B-value drop of ${diff.toFixed(2)} detected (${deviation.toFixed(1)}σ). This MAY indicate increasing tectonic stress. Not a prediction.`;
-      if (trend === "elevated") return `B-value slightly below baseline (${deviation.toFixed(1)}σ). Monitoring closely.`;
+      if (trend === "anomalous") return `B-value drop of ${diff.toFixed(2)} detected (${deviation.toFixed(1)} SD). This MAY indicate increasing tectonic stress. Not a prediction.`;
+      if (trend === "elevated") return `B-value slightly below baseline (${deviation.toFixed(1)} SD). Monitoring closely.`;
       return `B-value within normal range.`;
     },
     rateMessage: (anomalyType: string, ratio: number, z: number) => {

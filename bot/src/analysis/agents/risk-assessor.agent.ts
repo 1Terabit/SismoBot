@@ -42,7 +42,7 @@ export interface RiskAssessmentReport {
 
 const DISCLAIMER =
   "⚠️ AVISO: Este análisis se genera mediante modelos estadísticos y datos sísmicos en tiempo real " +
-  "provenientes de fuentes oficiales públicas (USGS, EMSC, FUNVISIS). " +
+  "provenientes de fuentes oficiales públicas (USGS, EMSC). " +
   "Los terremotos NO se pueden predecir con exactitud. Esta información es puramente referencial. " +
   "Consulte siempre a las autoridades locales de protección civil para alertas oficiales.";
 
