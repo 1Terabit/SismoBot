@@ -69,11 +69,27 @@ const i18n = {
     riskHigh: "ALTO (ALERTA NARANJA)",
     riskModerate: "MODERADO (ALERTA AMARILLA)",
     riskLow: "BAJO (NORMAL)",
-    disclaimer: "⚠️ AVISO: Este análisis se genera mediante modelos estadísticos y datos sísmicos en tiempo real provenientes de fuentes oficiales públicas (USGS, EMSC, FUNVISIS). Los terremotos NO se pueden predecir con exactitud. Esta información es puramente referencial. Consulte siempre a las autoridades locales de protección civil para alertas oficiales.",
+    disclaimer: "AVISO: Este análisis se genera mediante modelos estadísticos y datos sísmicos en tiempo real provenientes de fuentes oficiales públicas (USGS, EMSC, FUNVISIS). Los terremotos NO se pueden predecir con exactitud. Esta información es puramente referencial. Consulte siempre a las autoridades locales de protección civil para alertas oficiales.",
     lowBadge: "[BAJO]: ",
     moderateBadge: "[MODERADO]: ",
     highBadge: "[ALTO]: ",
-    criticalBadge: "[CRÍTICO]: "
+    criticalBadge: "[CRÍTICO]: ",
+    bValueMessage: (trend: string, deviation: number, diff: number) => {
+      if (trend === "anomalous") return `Caída de Valor-b de ${diff.toFixed(2)} detectada (${deviation.toFixed(1)}σ). Esto PODRÍA indicar aumento de tensión tectónica. No es una predicción.`;
+      if (trend === "elevated") return `Valor-b ligeramente por debajo del promedio (${deviation.toFixed(1)}σ). Monitoreando de cerca.`;
+      return `Valor-b dentro de parámetros normales.`;
+    },
+    rateMessage: (anomalyType: string, ratio: number, z: number) => {
+      if (anomalyType === "swarm") return `Tasa de sismicidad ${ratio.toFixed(1)}x sobre el promedio (z=${z.toFixed(1)}). Posible enjambre sísmico.`;
+      if (anomalyType === "quiescence") return `Inusual quietud sísmica detectada. Tasa al ${(ratio * 100).toFixed(0)}% del promedio (z=${z.toFixed(1)}).`;
+      if (ratio > 1.5) return `Tasa de sismicidad ligeramente elevada (${ratio.toFixed(1)}x promedio).`;
+      return `Tasa de sismicidad dentro del rango normal.`;
+    },
+    etasMessage: (probM4: number, probM3: number, mag: number, place: string) => {
+      if (probM4 > 0.3) return `Alta probabilidad de réplica cerca de ${place}. ${(probM4 * 100).toFixed(0)}% prob. de M4+ en próximas 24h.`;
+      if (probM3 > 0.5) return `Actividad moderada de réplicas esperada cerca de ${place}. ${(probM3 * 100).toFixed(0)}% prob. de M3+ en 24h.`;
+      return `Secuencia de réplicas de M${mag} cerca de ${place} decayendo normalmente.`;
+    }
   },
   en: {
     dept: "SISMOBOT - TECTONIC ANALYSIS DEPARTMENT",
@@ -120,11 +136,27 @@ const i18n = {
     riskHigh: "HIGH (ORANGE ALERT)",
     riskModerate: "MODERATE (YELLOW ALERT)",
     riskLow: "LOW (NORMAL)",
-    disclaimer: "⚠️ DISCLAIMER: This analysis is generated using statistical models and real-time seismic data from public official sources (USGS, EMSC, FUNVISIS). Earthquakes CANNOT be predicted with certainty. This information is purely referential. Always consult local civil protection authorities for official alerts.",
+    disclaimer: "DISCLAIMER: This analysis is generated using statistical models and real-time seismic data from public official sources (USGS, EMSC, FUNVISIS). Earthquakes CANNOT be predicted with certainty. This information is purely referential. Always consult local civil protection authorities for official alerts.",
     lowBadge: "[LOW]: ",
     moderateBadge: "[MODERATE]: ",
     highBadge: "[HIGH]: ",
-    criticalBadge: "[CRITICAL]: "
+    criticalBadge: "[CRITICAL]: ",
+    bValueMessage: (trend: string, deviation: number, diff: number) => {
+      if (trend === "anomalous") return `B-value drop of ${diff.toFixed(2)} detected (${deviation.toFixed(1)}σ). This MAY indicate increasing tectonic stress. Not a prediction.`;
+      if (trend === "elevated") return `B-value slightly below baseline (${deviation.toFixed(1)}σ). Monitoring closely.`;
+      return `B-value within normal range.`;
+    },
+    rateMessage: (anomalyType: string, ratio: number, z: number) => {
+      if (anomalyType === "swarm") return `Seismicity rate is ${ratio.toFixed(1)}x above baseline (z=${z.toFixed(1)}). Possible seismic swarm detected.`;
+      if (anomalyType === "quiescence") return `Unusual seismic quiescence detected. Rate is ${(ratio * 100).toFixed(0)}% of baseline (z=${z.toFixed(1)}).`;
+      if (ratio > 1.5) return `Seismicity rate slightly elevated (${ratio.toFixed(1)}x baseline).`;
+      return `Seismicity rate within normal range.`;
+    },
+    etasMessage: (probM4: number, probM3: number, mag: number, place: string) => {
+      if (probM4 > 0.3) return `High aftershock probability near ${place}. ${(probM4 * 100).toFixed(0)}% chance of M4+ in the next 24h.`;
+      if (probM3 > 0.5) return `Moderate aftershock activity expected near ${place}. ${(probM3 * 100).toFixed(0)}% chance of M3+ in 24h.`;
+      return `Aftershock sequence from M${mag} near ${place} is decaying normally.`;
+    }
   }
 };
 
@@ -205,29 +237,41 @@ function buildReportDocument(report: RiskAssessmentReport, lang: "es" | "en" = "
 
     // B-Value Row
     if (assessment.indicators.bValue) {
+      const b = assessment.indicators.bValue;
+      const diff = b.historicalBValue - b.currentBValue;
+      // @ts-ignore - TS doesn't know about dynamic i18n functions
+      const msg = t.bValueMessage(b.trend, b.deviation, diff);
+      
       tableBody.push([
         { text: t.bValue },
-        { text: `${t.actual}: ${assessment.indicators.bValue.currentBValue.toFixed(2)}\n${t.base}: ${assessment.indicators.bValue.historicalBValue?.toFixed(2) ?? 'N/A'}\n${t.deviation}: ${assessment.indicators.bValue.deviation.toFixed(1)}` },
-        { text: assessment.indicators.bValue.message || "" },
+        { text: `${t.actual}: ${b.currentBValue.toFixed(2)}\n${t.base}: ${b.historicalBValue?.toFixed(2) ?? 'N/A'}\n${t.deviation}: ${b.deviation.toFixed(1)}` },
+        { text: msg },
       ]);
     }
 
     // Seismicity Rate Row
     if (assessment.indicators.rate) {
+      const r = assessment.indicators.rate;
+      // @ts-ignore
+      const msg = t.rateMessage(r.anomalyType, r.rateRatio, r.significance);
+      
       tableBody.push([
         { text: t.seismicityRate },
-        { text: `Ratio: ${assessment.indicators.rate.rateRatio.toFixed(1)}x\n${t.significance}: ${assessment.indicators.rate.significance?.toFixed(2) ?? 'N/A'}` },
-        { text: assessment.indicators.rate.message || "" },
+        { text: `Ratio: ${r.rateRatio.toFixed(1)}x\n${t.significance}: ${r.significance?.toFixed(2) ?? 'N/A'}` },
+        { text: msg },
       ]);
     }
 
     // ETAS Row(s)
     if (assessment.indicators.activeForecasts && assessment.indicators.activeForecasts.length > 0) {
       for (const etas of assessment.indicators.activeForecasts) {
+        // @ts-ignore
+        const msg = t.etasMessage(etas.forecast24h.probM4, etas.forecast24h.probM3, etas.mainshockMag, etas.mainshockPlace);
+        
         tableBody.push([
           { text: `${t.etasModel}\n(${t.etasEvent}: M${etas.mainshockMag} ${etas.mainshockPlace})` },
           { text: `${t.probM4}: ${(etas.forecast24h.probM4 * 100).toFixed(1)}%\n${t.probM5}: ${(etas.forecast24h.probM5 * 100).toFixed(1)}%` },
-          { text: etas.message },
+          { text: msg },
         ]);
       }
     } else {
