@@ -351,7 +351,7 @@ function buildReportDocument(report: RiskAssessmentReport, lang: "es" | "en" = "
     style: "disclaimer",
   });
 
-  const logoPath = path.join(__dirname, "../../../../pwa/public/icons/icon-circle.png");
+  const logoPath = path.join(__dirname, "../../../assets/icon-circle.png");
 
   return {
     background: function (currentPage: number, pageSize: { width: number, height: number }) {
