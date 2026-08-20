@@ -202,7 +202,7 @@ async function main(): Promise<void> {
         res.writeHead(200, {
           "Content-Type": "application/pdf",
           "Content-Disposition": `inline; filename=boletin_sismico_latest_${lang}.pdf`,
-          "Access-Control-Allow-Origin": "*" // Allow PWA to fetch it
+          "Access-Control-Allow-Origin": process.env.FRONTEND_URL || "https://sismobot.vercel.app" // Restrict to PWA domain
         });
         const stream = fs.createReadStream(reportPath);
         stream.pipe(res);
