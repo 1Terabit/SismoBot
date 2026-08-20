@@ -41,9 +41,10 @@ export interface RiskAssessmentReport {
 }
 
 const DISCLAIMER =
-  "⚠️ DISCLAIMER: This analysis is based on statistical models and historical seismicity patterns. " +
-  "Earthquakes CANNOT be predicted with certainty. This information is for awareness only. " +
-  "Always follow official emergency guidelines from your local authorities.";
+  "⚠️ AVISO: Este análisis se genera mediante modelos estadísticos y datos sísmicos en tiempo real " +
+  "provenientes de fuentes oficiales públicas (USGS, EMSC, FUNVISIS). " +
+  "Los terremotos NO se pueden predecir con exactitud. Esta información es puramente referencial. " +
+  "Consulte siempre a las autoridades locales de protección civil para alertas oficiales.";
 
 function calculateRiskScore(
   bValue: BValueResult | null,

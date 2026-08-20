@@ -143,6 +143,34 @@ async function main(): Promise<void> {
     }
   });
 
+  // 6.1 Weekly Notification (Every Monday at 9:00 AM America/Caracas timezone)
+  // Since server is UTC, we use timezone setting or just use UTC equivalent.
+  // 9 AM VET = 13:00 UTC
+  cron.schedule("0 13 * * 1", async () => {
+    try {
+      const users = await getAllActiveUsers();
+      let sent = 0;
+      for (const user of users) {
+        try {
+          await bot.api.sendMessage(
+            user.telegramId, 
+            "📊 *¡Nuevo Boletín de Inteligencia Sísmica disponible!*\n\n" +
+            "Se ha generado un nuevo reporte semanal de riesgos tectónicos.\n" +
+            "Envía /reporte para descargarlo en formato PDF.",
+            { parse_mode: "Markdown" }
+          );
+          sent++;
+          await new Promise(resolve => setTimeout(resolve, 50)); // rate limiting
+        } catch(e) {
+          logger.error("WeeklyCron", `Failed to send to ${user.telegramId}`);
+        }
+      }
+      logger.info("WeeklyCron", `Sent weekly digest notification to ${sent} users.`);
+    } catch (err) {
+      logger.error("WeeklyCron", "Failed to broadcast weekly digest", err);
+    }
+  });
+
   // 7. Start Seismic Risk Analysis Scheduler (runs every 6 hours)
   startAnalysisScheduler();
 
@@ -160,7 +188,29 @@ async function main(): Promise<void> {
 
   // 8. Start a dummy HTTP server for Render free tier keep-alive
   const server = http.createServer((req, res) => {
-    if (req.url === "/ping" || req.url === "/") {
+    if (req.url && req.url.startsWith("/api/report")) {
+      const fs = require("fs");
+      const path = require("path");
+      const os = require("os");
+      
+      const parsedUrl = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
+      const lang = parsedUrl.searchParams.get("lang") === "en" ? "en" : "es";
+      
+      const reportPath = path.join(os.tmpdir(), `sismobot_boletin_latest_${lang}.pdf`);
+      
+      if (fs.existsSync(reportPath)) {
+        res.writeHead(200, {
+          "Content-Type": "application/pdf",
+          "Content-Disposition": `inline; filename=boletin_sismico_latest_${lang}.pdf`,
+          "Access-Control-Allow-Origin": "*" // Allow PWA to fetch it
+        });
+        const stream = fs.createReadStream(reportPath);
+        stream.pipe(res);
+      } else {
+        res.writeHead(404);
+        res.end("Report not generated yet. Please try again later.");
+      }
+    } else if (req.url === "/ping" || req.url === "/") {
       res.writeHead(200);
       res.end("pong");
     } else {

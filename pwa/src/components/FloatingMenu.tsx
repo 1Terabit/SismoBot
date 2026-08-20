@@ -49,6 +49,17 @@ export function FloatingMenu({
         </button>
 
         <a
+          id="btn-download-pdf-island"
+          href={`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/report?lang=${currentLang.startsWith('en') ? 'en' : 'es'}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="island-btn"
+          title="Descargar Boletín PDF"
+        >
+          📄
+        </a>
+
+        <a
           id="tour-telegram-island"
           href="https://t.me/Sismove_bot"
           target="_blank"
