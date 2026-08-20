@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="./pwa/public/sismobot.png" alt="SismoBot Logo" width="200"/>
+  <img src="./pwa/public/icons/icon-512.png" alt="SismoBot Logo" width="150"/>
   <h1>SismoBot 🌍⚡</h1>
   <p><strong>A Distributed Seismic Risk Intelligence & Early Warning Platform</strong></p>
   <i>Powered by Multi-Agent AI, Custom DAG Orchestration, and Real Seismology Models</i>
@@ -67,48 +67,22 @@ git clone git@github.com:1Terabit/SismoBot.git
 cd SismoBot
 ```
 
-### 2. Backend (Bot & API) Setup
+### 2. Install Dependencies & Run
+You will need to set up your `.env` files for both the `bot` and `pwa` directories with your respective database credentials, VAPID keys, and Telegram tokens.
+
+**Backend (Bot):**
 ```bash
 cd bot
 pnpm install
-```
-Create a `.env` file in the `bot` directory:
-```env
-TELEGRAM_BOT_TOKEN=your_telegram_token
-DATABASE_URL=your_postgres_connection_string
-POLL_INTERVAL_SECONDS=15
-FRONTEND_URL=http://localhost:5173
-VAPID_PUBLIC_KEY=your_vapid_public
-VAPID_PRIVATE_KEY=your_vapid_private
-VAPID_EMAIL=mailto:you@example.com
-```
-Run the backend:
-```bash
 pnpm dev
 ```
 
-### 3. Frontend (PWA) Setup
-Open a new terminal and navigate to the PWA folder:
+**Frontend (PWA):**
 ```bash
-cd pwa
+cd ../pwa
 pnpm install
-```
-Create a `.env` file in the `pwa` directory:
-```env
-VITE_API_URL=http://localhost:3000
-VITE_VAPID_PUBLIC_KEY=your_vapid_public
-```
-Run the frontend:
-```bash
 pnpm dev
 ```
-
----
-
-## 🛡️ Security & OpSec
-- **CORS Protection**: API endpoints strictly validate `Access-Control-Allow-Origin`.
-- **SQLi Protection**: 100% Parameterized queries via `pg`.
-- **DDoS Mitigation (CPU)**: PDF generation is decoupled from the HTTP server via cron-based caching, preventing CPU starvation attacks.
 
 ---
 
