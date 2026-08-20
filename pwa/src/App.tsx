@@ -8,6 +8,7 @@ import { EventFeed } from "./components/EventFeed";
 import { PushSubscribe } from "./components/PushSubscribe";
 import type { PushSubscribeHandle } from "./components/PushSubscribe";
 import { SettingsModal } from "./components/SettingsModal";
+import { FloatingMenu } from "./components/FloatingMenu";
 import { useSeismicData } from "./hooks/useSeismicData";
 import { useSettings } from "./hooks/useSettings";
 import type { Settings } from "./hooks/useSettings";
@@ -15,7 +16,7 @@ import { isEventInRegion } from "./utils/regions";
 import type { SeismicEvent } from "./types";
 
 export default function App() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { events, isLoading, lastUpdate, newEventId } = useSeismicData();
   const { settings, updateSettings } = useSettings();
   const [selectedEvent, setSelectedEvent] = useState<SeismicEvent | null>(null);
@@ -73,6 +74,10 @@ export default function App() {
           popover: { title: t("tour.step2.title"), description: t("tour.step2.desc"), side: "left", align: "start" }
         },
         {
+          element: '#tour-dynamic-island',
+          popover: { title: "Menú Dinámico", description: "Usa esta flecha para mostrar u ocultar opciones como el Idioma, Configuración y Telegram.", side: "top", align: "center" }
+        },
+        {
           element: '#tour-push',
           popover: { title: t("tour.step3.title"), description: t("tour.step3.desc"), side: "top", align: "start" }
         },
@@ -126,6 +131,14 @@ export default function App() {
           <div className="brand-watermark">
             By <span>Anthwam</span>
           </div>
+          <FloatingMenu
+            onOpenSettings={() => setIsSettingsOpen(true)}
+            onStartTour={startTour}
+            onChangeLanguage={() => {
+              i18n.changeLanguage(i18n.language.startsWith('es') ? 'en' : 'es');
+            }}
+            currentLang={i18n.language}
+          />
           <button 
             className="sidebar-toggle"
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}

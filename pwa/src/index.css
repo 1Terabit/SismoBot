@@ -163,8 +163,9 @@ body {
 /* ─── Brand Watermark ─────────────────────────────────────────── */
 .brand-watermark {
   position: absolute;
-  bottom: max(24px, env(safe-area-inset-bottom));
-  left: max(24px, env(safe-area-inset-left));
+  bottom: calc(max(16px, env(safe-area-inset-bottom)) + 55px);
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 1000;
   pointer-events: none;
   font-family: 'Outfit', sans-serif;
@@ -862,6 +863,83 @@ body {
 .btn-save:hover { opacity: 0.9; }
 .btn-save:disabled { opacity: 0.5; cursor: not-allowed; }
 
+/* ─── Dynamic Island ────────────────────────────────────────── */
+.dynamic-island-wrapper {
+  position: absolute;
+  bottom: max(16px, env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.island-toggle {
+  background: rgba(15, 15, 20, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: var(--text-secondary);
+  border-radius: 20px;
+  width: 40px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  opacity: 0.5;
+}
+
+.island-toggle:hover {
+  opacity: 1;
+  color: var(--text-primary);
+}
+
+.dynamic-island {
+  background: rgba(15, 15, 20, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 40px;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
+  transition: all var(--transition-normal);
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+}
+
+.dynamic-island-wrapper.is-open .dynamic-island {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.island-btn {
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity var(--transition-fast), transform var(--transition-fast), color var(--transition-fast);
+}
+
+.island-btn:hover {
+  opacity: 1;
+  color: var(--severity-micro);
+  transform: scale(1.1);
+}
+
 /* ─── Responsive ────────────────────────────────────────────── */
 @media (max-width: 768px) {
   .app__main {
@@ -929,31 +1007,12 @@ body {
     font-size: 1.2rem;
   }
 
-  .header__status {
-    display: none;
-  }
+  .desktop-only { display: none !important; }
+  .dynamic-island-wrapper { display: flex; }
 
-  .header__hamburger {
-    display: block;
-  }
-
-  .header__actions {
-    display: none;
-    position: absolute;
-    top: calc(100% - 10px);
-    right: max(14px, env(safe-area-inset-right));
-    background: var(--bg-secondary);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    flex-direction: column;
-    padding: 12px;
-    gap: 12px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
-    z-index: 2000;
-  }
-
-  .header__actions--open {
-    display: flex;
+  /* Mobile sidebar now takes full width minus a tiny margin, or just 85vw */
+  .app__sidebar {
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.8);
   }
 }
 
