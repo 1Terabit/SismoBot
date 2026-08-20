@@ -78,7 +78,7 @@ export function SeismicMap({ events, selectedEvent, newEventId, alertEventId }: 
         maxBoundsViscosity={1.0}
         style={{ height: "100%", width: "100%", backgroundColor: "#111" }}
         zoomControl={true}
-        attributionControl={true}
+        attributionControl={false}
       >
         <TileLayer
           attribution='&copy; <a href="https://carto.com">CARTO</a>'
