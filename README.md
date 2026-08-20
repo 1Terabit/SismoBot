@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="./pwa/public/icons/icon-512.png" alt="SismoBot Logo" width="150"/>
+  <img src="./pwa/public/favicon.svg" alt="SismoBot Logo" width="150"/>
   <h1>SismoBot 🌍⚡</h1>
   <p><strong>A Distributed Seismic Risk Intelligence & Early Warning Platform</strong></p>
   <i>Powered by Multi-Agent AI, Custom DAG Orchestration, and Real Seismology Models</i>
