@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { MapContainer, TileLayer, CircleMarker, Popup, useMap } from "react-leaflet";
+import { MapContainer, TileLayer, CircleMarker, Popup, useMap, Rectangle } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { getMagnitudeColor, getMarkerRadius, getShakeClass, getTimeAgo } from "../types";
 import type { SeismicEvent } from "../types";
-
+import { useRiskAnalysis } from "../hooks/useRiskAnalysis";
+import { REGION_BOUNDS } from "../utils/regions";
 interface SeismicMapProps {
   events: SeismicEvent[];
   selectedEvent: SeismicEvent | null;
@@ -27,6 +28,7 @@ export function SeismicMap({ events, selectedEvent, newEventId, alertEventId }: 
   const mapRef = useRef<HTMLDivElement>(null);
   const markerRefs = useRef<Record<string, any>>({});
   const [showFlash, setShowFlash] = useState(false);
+  const { report } = useRiskAnalysis();
 
   // Screen flash for M6+ new events
   useEffect(() => {
@@ -87,6 +89,69 @@ export function SeismicMap({ events, selectedEvent, newEventId, alertEventId }: 
         />
 
         <FlyToEvent event={selectedEvent} />
+
+        {/* Risk Overlays */}
+        {report?.assessments.map((assessment) => {
+          if (assessment.riskLevel === "low" || assessment.regionName === "all") return null;
+          
+          const regionKey = Object.keys(REGION_BOUNDS).find((key) => {
+             // We need to match the English or Spanish name loosely. 
+             // Simplest way is to map the regionName to our keys.
+             const nameLower = assessment.regionName.toLowerCase();
+             return nameLower.includes(key.toLowerCase()) || 
+                    (key === "caribe" && nameLower.includes("carib")) ||
+                    (key === "centroamerica" && nameLower.includes("central")) ||
+                    (key === "sudamerica" && nameLower.includes("south")) ||
+                    (key === "norteamerica" && nameLower.includes("north"));
+          }) || assessment.regionName.toLowerCase();
+
+          const bounds = REGION_BOUNDS[regionKey];
+          if (!bounds) return null;
+
+          const colorMap = {
+            moderate: "#fbbf24", // yellow-400
+            high: "#f97316", // orange-500
+            critical: "#ef4444", // red-500
+          };
+
+          const color = colorMap[assessment.riskLevel as keyof typeof colorMap] || "#fbbf24";
+          const isCritical = assessment.riskLevel === "critical";
+
+          return (
+            <Rectangle
+              key={`risk-${regionKey}`}
+              bounds={[
+                [bounds.minLat, bounds.minLon],
+                [bounds.maxLat, bounds.maxLon],
+              ]}
+              pathOptions={{
+                color,
+                weight: isCritical ? 2 : 1,
+                fillColor: color,
+                fillOpacity: isCritical ? 0.2 : 0.1,
+                className: isCritical ? "pulse-critical" : "",
+              }}
+            >
+              <Popup className="quake-popup">
+                <div className="quake-popup__title" style={{ color }}>
+                  ⚠️ Zona de Riesgo: {assessment.riskLevel.toUpperCase()}
+                </div>
+                <div className="quake-popup__row" style={{ fontWeight: "bold" }}>
+                  {assessment.regionName}
+                </div>
+                <div className="quake-popup__row">
+                  Score de Anomalía: {assessment.riskScore}/100
+                </div>
+                <hr style={{ borderColor: "#333", margin: "8px 0" }} />
+                {assessment.factors.map((factor, idx) => (
+                  <div key={idx} className="quake-popup__row" style={{ fontSize: "0.85em", color: "#ccc" }}>
+                    • {factor}
+                  </div>
+                ))}
+              </Popup>
+            </Rectangle>
+          );
+        })}
 
         {events.map((event) => {
           const color = getMagnitudeColor(event.magnitude);

@@ -1058,3 +1058,23 @@ body {
 .driver-popover-navigation-btns {
   gap: 8px !important;
 }
+
+/* Risk Overlay Animations */
+@keyframes pulse-critical {
+  0% {
+    fill-opacity: 0.2;
+    stroke-opacity: 0.8;
+  }
+  50% {
+    fill-opacity: 0.5;
+    stroke-opacity: 1;
+  }
+  100% {
+    fill-opacity: 0.2;
+    stroke-opacity: 0.8;
+  }
+}
+
+.pulse-critical {
+  animation: pulse-critical 2s infinite ease-in-out;
+}

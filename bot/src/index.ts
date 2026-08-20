@@ -13,7 +13,7 @@ import { getAllActiveUsers, cleanOldEvents, initDatabase } from "./db/database";
 import { POLL_INTERVAL_MS } from "./config";
 import { initWebPush } from "./services/web-push";
 import { logger } from "./utils/logger";
-import { startAnalysisScheduler } from "./analysis/workflow";
+import { startAnalysisScheduler, getLastReport } from "./analysis/workflow";
 
 async function main(): Promise<void> {
   logger.info("Main", "═══════════════════════════════════════════════");
@@ -210,6 +210,13 @@ async function main(): Promise<void> {
         res.writeHead(404);
         res.end("Report not generated yet. Please try again later.");
       }
+    } else if (req.url && req.url.startsWith("/api/analysis")) {
+      const report = getLastReport();
+      res.writeHead(200, {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": process.env.FRONTEND_URL || "https://sismobot.vercel.app"
+      });
+      res.end(JSON.stringify(report || { status: "pending" }));
     } else if (req.url === "/ping" || req.url === "/") {
       res.writeHead(200);
       res.end("pong");
