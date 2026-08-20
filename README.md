@@ -13,6 +13,12 @@ Built with **Spec-Driven Development (SDD)**, it bridges the gap between raw dat
 
 ---
 
+## 🔬 Applied Data Science & Seismology
+Instead of just sending push notifications, SismoBot runs real-time statistical computations on localized earthquake catalogs to provide actionable intelligence:
+- **Gutenberg-Richter Law (b-Value)**: Continuously monitors the ratio of small to large earthquakes to determine if tectonic stress is building up or releasing.
+- **Z-Score Anomaly Detection**: Compares real-time seismic frequencies against historical baselines to detect swarm behavior.
+- **ETAS Model (Epidemic-Type Aftershock Sequence)**: A highly advanced statistical model used to calculate the exact probability of severe aftershocks within the next 24 hours.
+
 ## 🧠 The Brains: Architecture & AI
 
 SismoBot was engineered from the ground up to handle complex asynchronous workflows without relying on standard, heavy workflow engines.
