@@ -10,6 +10,15 @@ export interface SeismicEvent {
   tsunami?: boolean;
 }
 
+export interface RiskAssessment {
+  regionId: string;
+  regionName: string;
+  bounds?: { minLat: number; maxLat: number; minLon: number; maxLon: number };
+  riskScore: number;
+  riskLevel: "low" | "moderate" | "high" | "critical";
+  summary: string;
+}
+
 export function getMagnitudeClass(mag: number): string {
   if (mag >= 6.0) return "major";
   if (mag >= 5.0) return "strong";

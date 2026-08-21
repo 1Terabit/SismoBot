@@ -17,12 +17,14 @@ import type { BValueResult } from "./b-value.agent";
 import type { RateResult } from "./seismicity-rate.agent";
 import type { AftershockForecast } from "./etas.agent";
 import { logger } from "../../utils/logger";
+import { GLOBAL_TECTONIC_ZONES } from "./data-collector.agent";
 
 export type RiskLevel = "low" | "moderate" | "high" | "critical";
 
 export interface RegionRiskAssessment {
   regionId: string;
   regionName: string;
+  bounds: { minLat: number; maxLat: number; minLon: number; maxLon: number };
   riskScore: number;        // 0-100
   riskLevel: RiskLevel;
   indicators: {
@@ -163,9 +165,13 @@ export class RiskAssessorAgent implements IAgent {
         const score = calculateRiskScore(bValue, rate, forecasts);
         const level = riskLevel(score);
 
+        const zone = GLOBAL_TECTONIC_ZONES.find((z) => z.id === regionId);
+        const defaultBounds = { minLat: -90, maxLat: 90, minLon: -180, maxLon: 180 };
+
         const assessment: RegionRiskAssessment = {
           regionId,
           regionName: regionNames.get(regionId) ?? regionId,
+          bounds: zone ? { minLat: zone.minlat, maxLat: zone.maxlat, minLon: zone.minlon, maxLon: zone.maxlon } : defaultBounds,
           riskScore: score,
           riskLevel: level,
           indicators: { bValue, rate, activeForecasts: forecasts },

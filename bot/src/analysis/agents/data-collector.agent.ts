@@ -7,7 +7,7 @@
 import type { IAgent, AgentContext, AgentResult } from "../engine";
 import { logger } from "../../utils/logger";
 
-// Latin America seismic regions with bounding boxes
+// Global tectonic zones with bounding boxes
 export interface SeismicRegion {
   id: string;
   name: string;
@@ -17,16 +17,24 @@ export interface SeismicRegion {
   maxlon: number;
 }
 
-export const LATAM_REGIONS: SeismicRegion[] = [
-  { id: "venezuela",     name: "Venezuela",       minlat: 0.5,   maxlat: 12.5,  minlon: -73.5, maxlon: -59.5 },
-  { id: "colombia",      name: "Colombia",        minlat: -4.5,  maxlat: 13.5,  minlon: -82,   maxlon: -66.5 },
-  { id: "peru",          name: "Perú",            minlat: -18.5, maxlat: 0,     minlon: -81.5, maxlon: -68 },
-  { id: "chile",         name: "Chile",           minlat: -56,   maxlat: -17.5, minlon: -76,   maxlon: -66 },
-  { id: "mexico",        name: "México",          minlat: 14,    maxlat: 33,    minlon: -118,  maxlon: -86 },
-  { id: "centroamerica", name: "Centroamérica",   minlat: 7,     maxlat: 18.5,  minlon: -92,   maxlon: -77 },
-  { id: "caribe",        name: "Caribe",          minlat: 10,    maxlat: 25,    minlon: -85,   maxlon: -58 },
-  { id: "argentina",     name: "Argentina",       minlat: -55,   maxlat: -21.5, minlon: -73.5, maxlon: -53.5 },
-  { id: "ecuador",       name: "Ecuador",         minlat: -5,    maxlat: 2,     minlon: -81.5, maxlon: -75 },
+export const GLOBAL_TECTONIC_ZONES: SeismicRegion[] = [
+  { id: "ring-of-fire-japan", name: "Anillo de Fuego (Japón)", minlat: 30, maxlat: 46, minlon: 128, maxlon: 155 },
+  { id: "ring-of-fire-kamchatka", name: "Anillo de Fuego (Kamchatka)", minlat: 46, maxlat: 60, minlon: 155, maxlon: 170 },
+  { id: "ring-of-fire-alaska", name: "Anillo de Fuego (Alaska)", minlat: 50, maxlat: 65, minlon: -180, maxlon: -130 },
+  { id: "cascadia", name: "Subducción de Cascadia (N.América)", minlat: 40, maxlat: 51, minlon: -130, maxlon: -120 },
+  { id: "san-andreas", name: "Falla de San Andrés (N.América)", minlat: 30, maxlat: 40, minlon: -125, maxlon: -114 },
+  { id: "mexico-subduction", name: "Subducción Mexicana", minlat: 14, maxlat: 33, minlon: -118, maxlon: -86 },
+  { id: "central-america", name: "Arco Centroamericano", minlat: 7, maxlat: 18.5, minlon: -92, maxlon: -77 },
+  { id: "caribbean", name: "Placa del Caribe", minlat: 10, maxlat: 25, minlon: -85, maxlon: -58 },
+  { id: "andean-subduction-north", name: "Subducción Andina N. (Ven-Col-Ecu)", minlat: -5, maxlat: 13.5, minlon: -82, maxlon: -59.5 },
+  { id: "andean-subduction-central", name: "Subducción Andina C. (Perú-Bol)", minlat: -25, maxlat: -5, minlon: -85, maxlon: -65 },
+  { id: "andean-subduction-south", name: "Subducción Andina S. (Chile-Arg)", minlat: -56, maxlat: -25, minlon: -80, maxlon: -65 },
+  { id: "alpine-himalayan", name: "Cinturón Alpino-Himalayo", minlat: 25, maxlat: 45, minlon: 45, maxlon: 100 },
+  { id: "anatolia", name: "Falla de Anatolia (Turquía)", minlat: 35, maxlat: 42, minlon: 25, maxlon: 45 },
+  { id: "philippines", name: "Placa Filipina", minlat: 5, maxlat: 20, minlon: 115, maxlon: 130 },
+  { id: "indonesia", name: "Fosa de Sunda (Indonesia)", minlat: -12, maxlat: 6, minlon: 90, maxlon: 120 },
+  { id: "tonga-kermadec", name: "Fosa de Tonga-Kermadec", minlat: -40, maxlat: -10, minlon: -180, maxlon: -170 },
+  { id: "mediterranean", name: "Zona Mediterránea", minlat: 30, maxlat: 47, minlon: -10, maxlon: 25 }
 ];
 
 export interface CatalogEvent {
@@ -49,8 +57,7 @@ export interface RegionCatalog {
 
 const USGS_API = "https://earthquake.usgs.gov/fdsnws/event/1/query";
 
-async function fetchUSGSCatalog(
-  region: SeismicRegion,
+async function fetchUSGSCatalogGlobal(
   startTime: Date,
   endTime: Date,
   minMagnitude = 1.0,
@@ -60,16 +67,12 @@ async function fetchUSGSCatalog(
     starttime: startTime.toISOString(),
     endtime: endTime.toISOString(),
     minmagnitude: minMagnitude.toString(),
-    minlatitude: region.minlat.toString(),
-    maxlatitude: region.maxlat.toString(),
-    minlongitude: region.minlon.toString(),
-    maxlongitude: region.maxlon.toString(),
     orderby: "time",
-    limit: "2000",
+    limit: "20000",
   });
 
   const url = `${USGS_API}?${params}`;
-  logger.debug("DATA", `Fetching USGS: ${region.name} (${startTime.toISOString().slice(0, 10)} → ${endTime.toISOString().slice(0, 10)})`);
+  logger.debug("DATA", `Fetching GLOBAL USGS (${startTime.toISOString().slice(0, 10)} → ${endTime.toISOString().slice(0, 10)}) M>=${minMagnitude}`);
 
   const res = await fetch(url);
   if (!res.ok) {
@@ -100,7 +103,7 @@ async function fetchUSGSCatalog(
     magnitude: f.properties.mag,
     magType: f.properties.magType,
     place: f.properties.place ?? "Unknown",
-    regionId: region.id,
+    regionId: "global",
   }));
 }
 
@@ -116,21 +119,29 @@ export class DataCollectorAgent implements IAgent {
     const startTime = Date.now();
 
     try {
-      // Determine which regions to analyze (default: all LATAM)
-      const regions = (context.metadata.regions as SeismicRegion[] | undefined) ?? LATAM_REGIONS;
+      const regions = (context.metadata.regions as SeismicRegion[] | undefined) ?? GLOBAL_TECTONIC_ZONES;
 
       const now = new Date();
       const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
       const oneYearAgo = new Date(now.getTime() - 365 * 24 * 60 * 60 * 1000);
 
+      // Fetch global data ONCE
+      const recentGlobalEvents = await fetchUSGSCatalogGlobal(thirtyDaysAgo, now, 2.5); // increased min to 2.5 globally
+      logger.info("DATA", `Fetched ${recentGlobalEvents.length} recent global events (30d, M2.5+)`);
+      
+      const historicalGlobalEvents = await fetchUSGSCatalogGlobal(oneYearAgo, thirtyDaysAgo, 4.0); // M4.0+ for historical to fit limits
+      logger.info("DATA", `Fetched ${historicalGlobalEvents.length} historical global events (1y, M4.0+)`);
+
       const catalogs: RegionCatalog[] = [];
 
+      // Filter in-memory for each region
       for (const region of regions) {
-        // Fetch recent 30-day data (all magnitudes ≥ 1.0)
-        const recentEvents = await fetchUSGSCatalog(region, thirtyDaysAgo, now, 1.0);
+        const isInside = (e: CatalogEvent) => 
+          e.latitude >= region.minlat && e.latitude <= region.maxlat &&
+          e.longitude >= region.minlon && e.longitude <= region.maxlon;
 
-        // Fetch 1-year historical for baseline (only ≥ 2.5 to keep manageable)
-        const historicalEvents = await fetchUSGSCatalog(region, oneYearAgo, thirtyDaysAgo, 2.5);
+        const recentEvents = recentGlobalEvents.filter(isInside).map(e => ({ ...e, regionId: region.id }));
+        const historicalEvents = historicalGlobalEvents.filter(isInside).map(e => ({ ...e, regionId: region.id }));
 
         catalogs.push({
           region,
@@ -138,10 +149,7 @@ export class DataCollectorAgent implements IAgent {
           fetchedAt: Date.now(),
         });
 
-        logger.info("DATA", `${region.name}: ${recentEvents.length} recent + ${historicalEvents.length} historical events`);
-
-        // Throttle requests to be respectful to USGS
-        await new Promise((r) => setTimeout(r, 300));
+        logger.info("DATA", `${region.name}: ${recentEvents.length} recent + ${historicalEvents.length} historical`);
       }
 
       return {
@@ -152,7 +160,7 @@ export class DataCollectorAgent implements IAgent {
         durationMs: Date.now() - startTime,
         metadata: {
           totalRegions: catalogs.length,
-          totalEvents: catalogs.reduce((sum, c) => sum + c.events.length, 0),
+          totalEventsMatched: catalogs.reduce((sum, c) => sum + c.events.length, 0),
         },
       };
     } catch (error: unknown) {

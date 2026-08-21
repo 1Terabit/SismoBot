@@ -4,7 +4,6 @@ import "leaflet/dist/leaflet.css";
 import { getMagnitudeColor, getMarkerRadius, getShakeClass, getTimeAgo } from "../types";
 import type { SeismicEvent } from "../types";
 import { useRiskAnalysis } from "../hooks/useRiskAnalysis";
-import { REGION_BOUNDS } from "../utils/regions";
 interface SeismicMapProps {
   events: SeismicEvent[];
   selectedEvent: SeismicEvent | null;
@@ -92,44 +91,30 @@ export function SeismicMap({ events, selectedEvent, newEventId, alertEventId }: 
 
         {/* Risk Overlays */}
         {report?.assessments.map((assessment) => {
-          if (assessment.riskLevel === "low" || assessment.regionName === "all") return null;
+          if (assessment.riskLevel === "low") return null;
+          if (!assessment.bounds) return null; // Fallback in case old report structure
+
+          const { minLat, maxLat, minLon, maxLon } = assessment.bounds;
           
-          const regionKey = Object.keys(REGION_BOUNDS).find((key) => {
-             // We need to match the English or Spanish name loosely. 
-             // Simplest way is to map the regionName to our keys.
-             const nameLower = assessment.regionName.toLowerCase();
-             return nameLower.includes(key.toLowerCase()) || 
-                    (key === "caribe" && nameLower.includes("carib")) ||
-                    (key === "centroamerica" && nameLower.includes("central")) ||
-                    (key === "sudamerica" && nameLower.includes("south")) ||
-                    (key === "norteamerica" && nameLower.includes("north"));
-          }) || assessment.regionName.toLowerCase();
-
-          const bounds = REGION_BOUNDS[regionKey];
-          if (!bounds) return null;
-
-          const colorMap = {
-            moderate: "#fbbf24", // yellow-400
-            high: "#f97316", // orange-500
-            critical: "#ef4444", // red-500
-          };
-
-          const color = colorMap[assessment.riskLevel as keyof typeof colorMap] || "#fbbf24";
-          const isCritical = assessment.riskLevel === "critical";
+          let color = "#fbbf24"; // moderate (yellow)
+          let className = "";
+          if (assessment.riskLevel === "critical") {
+            color = "#ef4444"; // red
+            className = "pulse-critical";
+          } else if (assessment.riskLevel === "high") {
+            color = "#f97316"; // orange
+          }
 
           return (
             <Rectangle
-              key={`risk-${regionKey}`}
-              bounds={[
-                [bounds.minLat, bounds.minLon],
-                [bounds.maxLat, bounds.maxLon],
-              ]}
+              key={`risk-${assessment.regionId}`}
+              bounds={[[minLat, minLon], [maxLat, maxLon]]}
               pathOptions={{
                 color,
-                weight: isCritical ? 2 : 1,
+                weight: assessment.riskLevel === "critical" ? 2 : 1,
                 fillColor: color,
-                fillOpacity: isCritical ? 0.2 : 0.1,
-                className: isCritical ? "pulse-critical" : "",
+                fillOpacity: assessment.riskLevel === "critical" ? 0.2 : 0.1,
+                className
               }}
             >
               <Popup className="quake-popup">
@@ -143,11 +128,9 @@ export function SeismicMap({ events, selectedEvent, newEventId, alertEventId }: 
                   Score de Anomalía: {assessment.riskScore}/100
                 </div>
                 <hr style={{ borderColor: "#333", margin: "8px 0" }} />
-                {assessment.factors.map((factor, idx) => (
-                  <div key={idx} className="quake-popup__row" style={{ fontSize: "0.85em", color: "#ccc" }}>
-                    • {factor}
-                  </div>
-                ))}
+                <div style={{ whiteSpace: "pre-wrap", fontSize: "0.85em", color: "#ccc" }}>
+                  {assessment.summary}
+                </div>
               </Popup>
             </Rectangle>
           );

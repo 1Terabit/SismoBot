@@ -1,11 +1,5 @@
 import { useState, useEffect } from "react";
-
-export interface RiskAssessment {
-  regionName: string;
-  riskLevel: "low" | "moderate" | "high" | "critical";
-  riskScore: number; // 0-100
-  factors: string[];
-}
+import type { RiskAssessment } from "../types";
 
 export interface RiskAssessmentReport {
   timestamp: string;
