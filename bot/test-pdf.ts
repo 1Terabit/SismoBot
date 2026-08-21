@@ -4,14 +4,17 @@ import * as path from "path";
 import * as fs from "fs";
 
 const mockReport: RiskAssessmentReport = {
-  generatedAt: new Date().toISOString(),
-  periodHours: 6,
+  generatedAt: Date.now(),
+  disclaimer: "Reporte generado por IA para pruebas",
   assessments: [
     {
       regionId: "oriente",
       regionName: "Oriente",
+      bounds: { minLat: 8, maxLat: 12, minLon: -65, maxLon: -61 },
       riskScore: 85,
       riskLevel: "high",
+      summary: "Alta tensión en el sistema de fallas oriental. Posibilidad de réplicas tras el evento principal.",
+      updatedAt: Date.now(),
       indicators: {
         bValue: {
           regionId: "oriente",
@@ -63,8 +66,11 @@ const mockReport: RiskAssessmentReport = {
     {
       regionId: "occidente",
       regionName: "Occidente",
+      bounds: { minLat: 7, maxLat: 11, minLon: -73, maxLon: -69 },
       riskScore: 40,
       riskLevel: "moderate",
+      summary: "Actividad base normal. El valor b se mantiene estable dentro del rango histórico.",
+      updatedAt: Date.now(),
       indicators: {
         bValue: {
           regionId: "occidente",
@@ -97,7 +103,10 @@ async function testPdf() {
   const agent = new PDFReportAgent();
   const context = {
     workflowId: "test",
+    workflowRunId: "test-run-123",
     startTime: Date.now(),
+    message: "Generando PDF de prueba",
+    metadata: {},
     previousResults: { "risk-assessment": { success: true, data: mockReport, agentName: 'test', durationMs: 0 } },
     state: {}
   };
@@ -106,9 +115,10 @@ async function testPdf() {
   const result = await agent.execute(context);
   console.log("PDF Result:", result);
   
-  if (result.data?.pdfPath) {
+  const resultData = result.data as { pdfPath?: string } | undefined;
+  if (resultData?.pdfPath) {
     const finalDest = "/Users/64bits/.gemini/antigravity-ide/brain/f46785bd-242c-4935-b46c-10264f56b464/boletin_sismico_prueba.pdf";
-    fs.copyFileSync(result.data.pdfPath, finalDest);
+    fs.copyFileSync(resultData.pdfPath, finalDest);
     console.log(`Saved copy to: ${finalDest}`);
   }
 }
