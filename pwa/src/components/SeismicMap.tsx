@@ -91,18 +91,26 @@ export function SeismicMap({ events, selectedEvent, newEventId, alertEventId }: 
 
         {/* Risk Overlays */}
         {report?.assessments.map((assessment) => {
-          if (assessment.riskLevel === "low") return null;
+          // Temporarily show ALL zones so the user can see the predictive global grid in action
+          // if (assessment.riskLevel === "low") return null;
           if (!assessment.bounds) return null; // Fallback in case old report structure
 
           const { minLat, maxLat, minLon, maxLon } = assessment.bounds;
           
           let color = "#fbbf24"; // moderate (yellow)
           let className = "";
+          let fillOpacity = 0.1;
+
           if (assessment.riskLevel === "critical") {
             color = "#ef4444"; // red
             className = "pulse-critical";
+            fillOpacity = 0.2;
           } else if (assessment.riskLevel === "high") {
             color = "#f97316"; // orange
+            fillOpacity = 0.2;
+          } else if (assessment.riskLevel === "low") {
+            color = "#22c55e"; // green
+            fillOpacity = 0.05; // very faint for low risk
           }
 
           return (
@@ -113,7 +121,7 @@ export function SeismicMap({ events, selectedEvent, newEventId, alertEventId }: 
                 color,
                 weight: assessment.riskLevel === "critical" ? 2 : 1,
                 fillColor: color,
-                fillOpacity: assessment.riskLevel === "critical" ? 0.2 : 0.1,
+                fillOpacity,
                 className
               }}
             >
