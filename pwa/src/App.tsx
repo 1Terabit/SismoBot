@@ -142,8 +142,6 @@ export default function App() {
       <Header 
         lastUpdate={lastUpdate} 
         eventCount={filteredEvents.length} 
-        onOpenSettings={() => setIsSettingsOpen(true)}
-        onStartTour={startTour}
       />
       <div className={`app__main ${!isSidebarOpen ? "app__main--collapsed" : ""}`}>
         <div className={`app__map ${alertEventId ? "app__map--alert" : ""}`}>
