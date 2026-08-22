@@ -142,6 +142,7 @@ export function SeismicMap({ events, selectedEvent, newEventId, alertEventId }: 
           "star-intensity": 0.5,
         }}
         style={{ width: "100%", height: "100%" }}
+        attributionControl={false}
       >
         {/* Risk Grid Layer */}
         <Source id="risk-grid" type="geojson" data={riskFeatures}>
