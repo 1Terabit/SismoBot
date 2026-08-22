@@ -627,67 +627,67 @@ body {
 
 @keyframes shake-micro {
   0%, 100% { transform: translate(0, 0); }
-  25% { transform: translate(0.5px, 0.5px); }
-  50% { transform: translate(-0.5px, -0.5px); }
-  75% { transform: translate(0.5px, -0.5px); }
+  25% { transform: translate(1px, 1px); }
+  50% { transform: translate(-1px, -1px); }
+  75% { transform: translate(1px, -1px); }
 }
 
 @keyframes shake-minor {
   0%, 100% { transform: translate(0, 0); }
-  10% { transform: translate(-1px, 1px); }
-  20% { transform: translate(2px, -1px); }
-  30% { transform: translate(-2px, 0px); }
-  40% { transform: translate(1px, 2px); }
-  50% { transform: translate(-1px, -2px); }
-  60% { transform: translate(2px, 1px); }
-  70% { transform: translate(-1px, -1px); }
-  80% { transform: translate(1px, 0px); }
-  90% { transform: translate(0px, 1px); }
+  10% { transform: translate(-2px, 2px); }
+  20% { transform: translate(4px, -2px); }
+  30% { transform: translate(-4px, 0px); }
+  40% { transform: translate(2px, 4px); }
+  50% { transform: translate(-2px, -4px); }
+  60% { transform: translate(4px, 2px); }
+  70% { transform: translate(-2px, -2px); }
+  80% { transform: translate(2px, 0px); }
+  90% { transform: translate(0px, 2px); }
 }
 
 @keyframes shake-moderate {
   0%, 100% { transform: translate(0, 0) rotate(0deg); }
-  10% { transform: translate(-3px, 2px) rotate(-0.5deg); }
-  20% { transform: translate(4px, -2px) rotate(0.5deg); }
-  30% { transform: translate(-4px, 0px) rotate(-0.3deg); }
-  40% { transform: translate(3px, 3px) rotate(0.3deg); }
-  50% { transform: translate(-2px, -3px) rotate(-0.5deg); }
-  60% { transform: translate(4px, 1px) rotate(0.5deg); }
-  70% { transform: translate(-3px, -2px) rotate(-0.3deg); }
-  80% { transform: translate(2px, 0px) rotate(0.2deg); }
-  90% { transform: translate(0px, 2px) rotate(0deg); }
+  10% { transform: translate(-6px, 4px) rotate(-1deg); }
+  20% { transform: translate(8px, -4px) rotate(1deg); }
+  30% { transform: translate(-8px, 0px) rotate(-0.6deg); }
+  40% { transform: translate(6px, 6px) rotate(0.6deg); }
+  50% { transform: translate(-4px, -6px) rotate(-1deg); }
+  60% { transform: translate(8px, 2px) rotate(1deg); }
+  70% { transform: translate(-6px, -4px) rotate(-0.6deg); }
+  80% { transform: translate(4px, 0px) rotate(0.4deg); }
+  90% { transform: translate(0px, 4px) rotate(0deg); }
 }
 
 @keyframes shake-strong {
   0%, 100% { transform: translate(0, 0) rotate(0deg); }
-  10% { transform: translate(-6px, 3px) rotate(-1deg); }
-  20% { transform: translate(7px, -5px) rotate(1.5deg); }
-  30% { transform: translate(-8px, 2px) rotate(-1.5deg); }
-  40% { transform: translate(5px, 6px) rotate(1deg); }
-  50% { transform: translate(-4px, -7px) rotate(-2deg); }
-  60% { transform: translate(8px, 3px) rotate(1.5deg); }
-  70% { transform: translate(-6px, -4px) rotate(-1deg); }
-  80% { transform: translate(4px, -2px) rotate(0.5deg); }
-  90% { transform: translate(-2px, 5px) rotate(-0.5deg); }
+  10% { transform: translate(-12px, 6px) rotate(-2deg); }
+  20% { transform: translate(14px, -10px) rotate(3deg); }
+  30% { transform: translate(-16px, 4px) rotate(-3deg); }
+  40% { transform: translate(10px, 12px) rotate(2deg); }
+  50% { transform: translate(-8px, -14px) rotate(-4deg); }
+  60% { transform: translate(16px, 6px) rotate(3deg); }
+  70% { transform: translate(-12px, -8px) rotate(-2deg); }
+  80% { transform: translate(8px, -4px) rotate(1deg); }
+  90% { transform: translate(-4px, 10px) rotate(-1deg); }
 }
 
 @keyframes shake-major {
   0%, 100% { transform: translate(0, 0) rotate(0deg); }
-  5% { transform: translate(-10px, 5px) rotate(-2deg); }
-  10% { transform: translate(12px, -8px) rotate(3deg); }
-  15% { transform: translate(-14px, 3px) rotate(-3deg); }
-  20% { transform: translate(8px, 10px) rotate(2deg); }
-  25% { transform: translate(-6px, -12px) rotate(-4deg); }
-  30% { transform: translate(14px, 5px) rotate(3deg); }
-  35% { transform: translate(-10px, -6px) rotate(-2deg); }
-  40% { transform: translate(6px, -4px) rotate(1deg); }
-  45% { transform: translate(-4px, 8px) rotate(-1.5deg); }
-  50% { transform: translate(10px, -6px) rotate(2.5deg); }
-  55% { transform: translate(-8px, 4px) rotate(-2deg); }
-  60% { transform: translate(12px, 6px) rotate(3deg); }
-  65% { transform: translate(-6px, -10px) rotate(-2.5deg); }
-  70% { transform: translate(8px, -4px) rotate(1.5deg); }
-  75% { transform: translate(-4px, 6px) rotate(-1deg); }
+  5% { transform: translate(-20px, 10px) rotate(-4deg); }
+  10% { transform: translate(24px, -16px) rotate(6deg); }
+  15% { transform: translate(-28px, 6px) rotate(-6deg); }
+  20% { transform: translate(16px, 20px) rotate(4deg); }
+  25% { transform: translate(-12px, -24px) rotate(-8deg); }
+  30% { transform: translate(28px, 10px) rotate(6deg); }
+  35% { transform: translate(-20px, -12px) rotate(-4deg); }
+  40% { transform: translate(12px, -8px) rotate(2deg); }
+  45% { transform: translate(-8px, 16px) rotate(-3deg); }
+  50% { transform: translate(20px, -12px) rotate(5deg); }
+  55% { transform: translate(-16px, 8px) rotate(-4deg); }
+  60% { transform: translate(24px, 12px) rotate(6deg); }
+  65% { transform: translate(-12px, -20px) rotate(-5deg); }
+  70% { transform: translate(16px, -8px) rotate(3deg); }
+  75% { transform: translate(-8px, 12px) rotate(-2deg); }
   80% { transform: translate(6px, -2px) rotate(0.5deg); }
   85% { transform: translate(-2px, 4px) rotate(-0.5deg); }
   90% { transform: translate(4px, -6px) rotate(1deg); }
