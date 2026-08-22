@@ -130,12 +130,12 @@ export function SeismicMap({ events, selectedEvent, newEventId, alertEventId }: 
         initialViewState={{
           longitude: -66.9,
           latitude: 10.5,
-          zoom: 3,
+          zoom: 1.5,
         }}
         mapStyle="mapbox://styles/mapbox/dark-v11"
         projection="globe"
         fog={{
-          range: [0.8, 8],
+          range: [0.5, 3],
           color: "#1e1e1e",
           "high-color": "#0d0d0d",
           "space-color": "#000000",

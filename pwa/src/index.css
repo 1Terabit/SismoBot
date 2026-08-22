@@ -442,11 +442,14 @@ body {
 }
 
 /* Hide Mapbox logo and attribution */
-.mapboxgl-ctrl-bottom-left,
-.mapboxgl-ctrl-bottom-right,
-.mapboxgl-ctrl-logo,
-.mapboxgl-ctrl-attrib {
+.mapboxgl-map .mapboxgl-ctrl-bottom-left,
+.mapboxgl-map .mapboxgl-ctrl-bottom-right,
+.mapboxgl-map .mapboxgl-ctrl-logo,
+.mapboxgl-map .mapboxgl-ctrl-attrib,
+.mapboxgl-control-container {
   display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
 }
 
 /* ─── Earthquake Marker ─────────────────────────────────────── */
