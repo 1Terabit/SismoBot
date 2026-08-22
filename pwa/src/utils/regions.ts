@@ -33,7 +33,7 @@ export const REGION_BOUNDS: Record<string, { minLat: number; maxLat: number; min
 };
 
 export function isEventInRegion(lat: number, lon: number, regionKey: string): boolean {
-  if (regionKey === "latam" || regionKey === "all") return true;
+  if (regionKey === "all") return true;
   const b = REGION_BOUNDS[regionKey];
   if (!b) return false;
   return lat >= b.minLat && lat <= b.maxLat && lon >= b.minLon && lon <= b.maxLon;

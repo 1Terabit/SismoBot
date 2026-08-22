@@ -36,7 +36,7 @@ export async function sendWebPushNotifications(event: SeismicEvent): Promise<num
 
   const validSubscriptions = subscriptions.filter(sub => {
     if (event.magnitude < sub.min_magnitude) return false;
-    if (sub.regions.includes("all") || sub.regions.includes("latam")) return true;
+    if (sub.regions.includes("all")) return true;
     return sub.regions.some(r => {
       const region = REGIONS[r];
       if (!region) return false;

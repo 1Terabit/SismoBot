@@ -29,7 +29,7 @@ export default function App() {
   const filteredEvents = useMemo(() => {
     return events.filter(e => {
       if (e.magnitude < settings.minMagnitude) return false;
-      if (settings.regions.includes("latam") || settings.regions.includes("all")) return true;
+      if (settings.regions.includes("all")) return true;
       return settings.regions.some(r => isEventInRegion(e.lat, e.lon, r));
     });
   }, [events, settings]);
